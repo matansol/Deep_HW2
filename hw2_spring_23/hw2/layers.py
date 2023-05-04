@@ -229,8 +229,8 @@ class Linear(Layer):
         # Initialize the weights to zero-mean gaussian noise with a standard
         # deviation of `wstd`. Init bias to zero.
         # ====== YOUR CODE: ======
-        self.b = torch.zeros(out_features)
-        self.w = torch.randn(out_features, in_features) * wstd
+        self.b = torch.zeros((1, out_features))
+        self.w = torch.normal(0, wstd, (out_features, in_features))
         # ========================
 
         # These will store the gradients
@@ -250,10 +250,7 @@ class Linear(Layer):
 
         # TODO: Compute the affine transform
         # ====== YOUR CODE: ======
-        print(self.w.shape)
-        wt = torch.transpose(self.w, 0, 1)
-        print(wt.shape)
-        out = torch.mm(x, wt + self.b
+        out = x @ self.w.T + self.b
         # ========================
 
         self.grad_cache["x"] = x
@@ -272,7 +269,10 @@ class Linear(Layer):
         #   - db, the gradient of the loss with respect to b
         #  Note: You should ACCUMULATE gradients in dw and db.
         # ====== YOUR CODE: ======
-        raise NotImplementedError()
+        dx = torch.mm(dout, self.w)
+        self.dw += torch.mm(dout.T, x)
+        self.db += dout.sum(0)
+        
         # ========================
 
         return dx
@@ -313,7 +313,9 @@ class CrossEntropyLoss(Layer):
         # TODO: Compute the cross entropy loss using the last formula from the
         #  notebook (i.e. directly using the class scores).
         # ====== YOUR CODE: ======
-        raise NotImplementedError()
+        correct_scores = -x.gather(1, y.unsqueeze(1)).squeeze()
+        loss = torch.mean(correct_scores + torch.log(torch.exp(x).sum(1)))
+        
         # ========================
 
         self.grad_cache["x"] = x
@@ -332,7 +334,11 @@ class CrossEntropyLoss(Layer):
 
         # TODO: Calculate the gradient w.r.t. the input x.
         # ====== YOUR CODE: ======
-        raise NotImplementedError()
+        x_softmax = torch.exp(x) / torch.exp(x).sum(1).unsqueeze(1)
+        one_hot = torch.nn.functional.one_hot(y, num_classes=x.shape[1])
+
+        dx = dout * (x_softmax - one_hot) / N
+        
         # ========================
 
         return dx
@@ -391,7 +397,10 @@ class Sequential(Layer):
         # TODO: Implement the forward pass by passing each layer's output
         #  as the input of the next.
         # ====== YOUR CODE: ======
-        raise NotImplementedError()
+        input = x
+        for lay in self.layers:
+            out = lay(input, **kw)
+            input = out
         # ========================
 
         return out
@@ -403,7 +412,9 @@ class Sequential(Layer):
         #  Each layer's input gradient should be the previous layer's output
         #  gradient. Behold the backpropagation algorithm in action!
         # ====== YOUR CODE: ======
-        raise NotImplementedError()
+        for lay in reversed(self.layers):
+            din = lay.backward(dout)
+            dout = din
         # ========================
 
         return din
@@ -413,7 +424,7 @@ class Sequential(Layer):
 
         # TODO: Return the parameter tuples from all layers.
         # ====== YOUR CODE: ======
-        raise NotImplementedError()
+        params = [param for lay in self.layers for param in lay.params()]
         # ========================
 
         return params
@@ -471,9 +482,17 @@ class MLP(Layer):
 
         # TODO: Build the MLP architecture as described.
         # ====== YOUR CODE: ======
-        raise NotImplementedError()
+        sizes = [in_features] + hidden_features + [num_classes]
+        for i,_ in enumerate(sizes[:-1]):
+            layers.append(Linear(sizes[i], sizes[i+1]))
+            if(i == len(sizes) - 2) :
+                continue
+            if(activation == 'relu') :
+                layers.append(ReLU())
+            else:
+                layers.append(Sigmoid())
         # ========================
-
+        
         self.sequence = Sequential(*layers)
 
     def forward(self, x, **kw):
