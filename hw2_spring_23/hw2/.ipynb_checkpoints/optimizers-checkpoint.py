@@ -92,8 +92,8 @@ class MomentumSGD(Optimizer):
 
         # TODO: Add your own initializations as needed.
         # ====== YOUR CODE: ======
-        self.v = 0
-       # self.hist = [0 for p, _ in params]
+        #self.v = 0
+        self.hist = [0 for p, _ in params]
         # ========================
 
     def step(self):
