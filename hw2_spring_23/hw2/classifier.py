@@ -22,7 +22,7 @@ class Classifier(nn.Module, ABC):
 
         # TODO: Add any additional initializations here, if you need them.
         # ====== YOUR CODE: ======
-        raise NotImplementedError()
+        #raise NotImplementedError()
         # ========================
 
     def forward(self, x: Tensor) -> Tensor:
@@ -34,7 +34,7 @@ class Classifier(nn.Module, ABC):
 
         # TODO: Implement the forward pass, returning raw scores from the wrapped model.
         # ====== YOUR CODE: ======
-        raise NotImplementedError()
+        z = self.model.forward(x)
         # ========================
         assert z.shape[0] == x.shape[0] and z.ndim == 2, "raw scores should be (N, C)"
         return z
@@ -47,7 +47,7 @@ class Classifier(nn.Module, ABC):
         """
         # TODO: Calcualtes class scores for each sample.
         # ====== YOUR CODE: ======
-        raise NotImplementedError()
+        z = self.forward(x)
         # ========================
         return self.predict_proba_scores(z)
 
@@ -59,7 +59,12 @@ class Classifier(nn.Module, ABC):
         """
         # TODO: Calculate class probabilities for the input.
         # ====== YOUR CODE: ======
-        raise NotImplementedError()
+        soft_max = nn.Softmax(dim=1)
+        
+        #print(z)
+        #row_sums = torch.sum(z, dim=1)
+        #z = z / row_sums.unsqueeze(1)
+        return soft_max(z)
         # ========================
 
     def classify(self, x: Tensor) -> Tensor:
@@ -128,7 +133,9 @@ class BinaryClassifier(Classifier):
         #  greater or equal to the threshold.
         #  Output should be a (N,) integer tensor.
         # ====== YOUR CODE: ======
-        raise NotImplementedError()
+        pred = torch.zeros(y_proba.size(0), 1, dtype=torch.int32)
+        pred[y_proba[:, self.positive_class] > self.threshold] = 1
+        return pred.squeeze()
         # ========================
 
 
@@ -177,7 +184,9 @@ def plot_decision_boundary_2d(
     #  plot a contour map.
     x1_grid, x2_grid, y_hat = None, None, None
     # ====== YOUR CODE: ======
-    raise NotImplementedError()
+    x1_grid, x2_grid = torch.meshgrid(x[:, 0], x[:, 1])
+    print(x1_grid)
+    print(x2_grid)
     # ========================
 
     # Plot the decision boundary as a filled contour
