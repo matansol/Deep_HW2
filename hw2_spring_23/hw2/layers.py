@@ -1,4 +1,3 @@
-import abc
 import torch
 
 
@@ -363,9 +362,9 @@ class Dropout(Layer):
         #  Notice that contrary to previous layers, this layer behaves
         #  differently a according to the current training_mode (train/test).
         # ====== YOUR CODE: ======
-        dropout = torch.bernoulli(torch.ones_like(x) * self.p) / (1-self.p)
+        dropout = (torch.empty(x.size()).uniform_(0, 1) >= self.p) / (1 - self.p)
         if self.training_mode:
-            out = x * dropout
+            out = torch.mul(x, dropout)
         else:
             out = x
         self.grad_cache['dropout'] = dropout
@@ -375,8 +374,10 @@ class Dropout(Layer):
 
     def backward(self, dout):
         # TODO: Implement the dropout backward pass.
-        # ====== YOUR CODE: ======
-        dx = dout * self.grad_cache['dropout'] # we only backwards in training
+        # ====== YOUR CODE: ======\
+        dx = dout
+        if self.training_mode:
+            dx =  torch.mul(self.grad_cache['dropout'], dx)  # we only backwards in training
         # ========================
 
         return dx
