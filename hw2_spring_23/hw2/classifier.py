@@ -185,9 +185,11 @@ def plot_decision_boundary_2d(
     x1_grid, x2_grid, y_hat = None, None, None
     # ====== YOUR CODE: ======
     x1_grid, x2_grid = torch.meshgrid(x[:, 0], x[:, 1])
+    X = torch.stack([x1_grid.flatten(), x2_grid.flatten()], dim=1)
+    X = X.squeeze()
+    y_hat = classifier(X)
+    y_hat = y_hat.reshape(x1_grid.shape[0], -1)
     
-    print(x1_grid)
-    print(x2_grid)
     # ========================
 
     # Plot the decision boundary as a filled contour

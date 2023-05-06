@@ -84,10 +84,10 @@ class Trainer(abc.ABC):
             #  - Save losses and accuracies in the lists above.
             # ====== YOUR CODE: ======
             train_result = self.train_epoch(dl_train, verbose = verbose, **kw)
-            train_loss.append(train_result.losses)
+            train_loss.append((sum(train_result.losses)/len(train_result.losses)).item())
             train_acc.append(train_result.accuracy)
-            test_result = self.train_epoch(dl_test, verbose = verbose, **kw)
-            test_loss.append(test_result.losses)
+            test_result = self.test_epoch(dl_test, verbose = verbose, **kw)
+            test_loss.append((sum(test_result.losses)/len(test_result.losses)).item())
             test_acc.append(test_result.accuracy)
             # ========================
 
@@ -97,6 +97,7 @@ class Trainer(abc.ABC):
             #  - Optional: Implement checkpoints. You can use the save_checkpoint
             #    method on this class to save the model to the file specified by
             #    the checkpoints argument.
+            actual_num_epochs+=1
             if best_acc is None or test_result.accuracy > best_acc:
                 # ====== YOUR CODE: ======
                 best_acc = test_result.accuracy
