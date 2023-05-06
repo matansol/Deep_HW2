@@ -184,12 +184,26 @@ def plot_decision_boundary_2d(
     #  plot a contour map.
     x1_grid, x2_grid, y_hat = None, None, None
     # ====== YOUR CODE: ======
-    x1_grid, x2_grid = torch.meshgrid(x[:, 0], x[:, 1])
-    X = torch.stack([x1_grid.flatten(), x2_grid.flatten()], dim=1)
-    X = X.squeeze()
-    y_hat = classifier(X)
-    y_hat = y_hat.reshape(x1_grid.shape[0], -1)
-    
+    #x1_grid, x2_grid = torch.meshgrid(x[:, 0], x[:, 1])
+    #X = torch.stack([x1_grid.flatten(), x2_grid.flatten()], dim=1)
+    #X = X.squeeze()
+    #y_hat = classifier.classify(X)
+    #y_hat = y_hat.reshape(x1_grid.shape[0], -1)
+    x1_min, x1_max = min(x[:, 0]), max(x[:, 0])
+    x2_min, x2_max = min(x[:, 1]), max(x[:, 1])
+    step_x1 = int((x1_max - x1_min) / dx)
+    step_x2 = int((x2_max - x2_min) / dx)
+    x_line = torch.linspace(min(x[:, 0]), max(x[:, 0]), step_x1)
+    y_line = torch.linspace(min(x[:, 1]), max(x[:, 1]), step_x2)
+
+    x1_grid, x2_grid = torch.meshgrid(x_line, y_line, indexing='xy')
+    x1_grid_vec = x1_grid.ravel()
+    x2_grid_vec = x2_grid.ravel()
+    grid = torch.dstack((x1_grid_vec, x2_grid_vec))
+    grid = grid.squeeze()
+
+    y_hat = classifier.classify(grid)
+    y_hat = y_hat.view(x1_grid.shape)
     # ========================
 
     # Plot the decision boundary as a filled contour
@@ -223,7 +237,12 @@ def select_roc_thresh(
     fpr, tpr, thresh = None, None, None
     optimal_theresh_idx, optimal_thresh = None, None
     # ====== YOUR CODE: ======
-    raise NotImplementedError()
+    y_scores = classifier.predict_proba(x).detach().numpy()
+    fpr, tpr, thresh = roc_curve(y, y_scores[:, classifier.positive_class])
+    optimal_thresh_idx = torch.argmin(torch.from_numpy(fpr - tpr))
+    optimal_thresh = thresh[optimal_thresh_idx]
+    
+    
     # ========================
 
     if plot:
