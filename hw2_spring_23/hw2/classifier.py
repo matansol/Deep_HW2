@@ -185,6 +185,7 @@ def plot_decision_boundary_2d(
     x1_grid, x2_grid, y_hat = None, None, None
     # ====== YOUR CODE: ======
     x1_grid, x2_grid = torch.meshgrid(x[:, 0], x[:, 1])
+    
     print(x1_grid)
     print(x2_grid)
     # ========================
