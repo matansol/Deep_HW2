@@ -69,7 +69,7 @@ class CNN(nn.Module):
 
     def _make_feature_extractor(self):
         in_channels, in_h, in_w, = tuple(self.in_size)
-
+        
         layers = []
         # TODO: Create the feature extractor part of the model:
         #  [(CONV -> ACT)*P -> POOL]*(N/P)
@@ -79,9 +79,18 @@ class CNN(nn.Module):
         #  pooling type and pooling parameters.
         #  Note: If N is not divisible by P, then N mod P additional
         #  CONV->ACTs should exist at the end, without a POOL after them.
-        # ====== YOUR CODE: ======
-        raise NotImplementedError()
-
+        # ====== YOUR CODE: ====== 
+        
+        activation = nn.ReLU() if self.activation_type == 'relu' else nn.LeakyReLU(**self.activation_params)
+        pool = nn.MaxPool2d(**self.pooling_params) if self.pooling_type == 'max' else nn.AvgPool2d(**self.pooling_params)
+        in_channel = in_channels
+        for i, out_channel in enumerate(self.channels):
+            conv = nn.Conv2d(in_channel, out_channel, **self.conv_params)
+            layers.append(conv)
+            layers.append(activation)
+            if (i + 1) % self.pool_every == 0:# and (i + 1) != len(self.channels):
+                layers.append(pool)
+            in_channel = out_channel
         # ========================
         seq = nn.Sequential(*layers)
         return seq
@@ -95,7 +104,10 @@ class CNN(nn.Module):
         rng_state = torch.get_rng_state()
         try:
             # ====== YOUR CODE: ======
-            raise NotImplementedError()
+            x = torch.rand(self.in_size).unsqueeze(0)
+            features = self.feature_extractor(x)
+            print(torch.numel(features))
+            return torch.numel(features)
             # ========================
         finally:
             torch.set_rng_state(rng_state)
@@ -109,7 +121,9 @@ class CNN(nn.Module):
         #  - The last Linear layer should have an output dim of out_classes.
         mlp: MLP = None
         # ====== YOUR CODE: ======
-        raise NotImplementedError()
+        
+        dims_len = len(self.hidden_dims)
+        mlp = MLP(self._n_features(), self.hidden_dims + [self.out_classes], [ACTIVATIONS[self.activation_type](**self.activation_params)] * dims_len+["none"])
         # ========================
         return mlp
 
@@ -119,7 +133,9 @@ class CNN(nn.Module):
         #  return class scores.
         out: Tensor = None
         # ====== YOUR CODE: ======
-        raise NotImplementedError()
+        x = self.feature_extractor(x)
+        x = torch.flatten(x, 1) 
+        out = self.mlp(x)
         # ========================
         return out
 
