@@ -9,6 +9,7 @@ import torchvision
 from torch.utils.data import DataLoader
 from torchvision.datasets import CIFAR10
 
+
 from cs236781.train_results import FitResult
 
 from .cnn import CNN, ResNet
@@ -86,6 +87,7 @@ def cnn_experiment(
     checkpoints=None,
     lr=1e-3,
     reg=1e-3,
+    momentum = 0.001,
     # Model params
     filters_per_layer=[64],
     layers_per_block=2,
@@ -129,7 +131,65 @@ def cnn_experiment(
     #   for you automatically.
     fit_res = None
     # ====== YOUR CODE: ======
-    raise NotImplementedError()
+    """
+    num_classes = 10
+    dl_train = DataLoader(ds_train, bs_train, shuffle=True)
+    dl_test = DataLoader(ds_test, bs_test, shuffle=False)
+    
+    in_size = ds_train[0][0].shape
+    channels = [filter for filter in filters_per_layer for i in range(layers_per_block)]
+    model_param = dict(
+        in_size=ds_train[0][0].shape, out_classes=num_classes, channels=channels,
+        pool_every=pool_every, hidden_dims=hidden_dims,
+        activation_type='lrelu', activation_params=dict(negative_slope=0.01),
+        pooling_type='avg', pooling_params=dict(kernel_size=2),
+        batchnorm=True, dropout=0.1,
+        bottleneck=False
+    )
+    net = ResNet(**model_param)
+    model = ArgMaxClassifier(model=net).to(device)
+    loss_fn = torch.nn.CrossEntropyLoss()
+    hp_optim = dict(lr=lr,
+            weight_decay=reg,
+            momentum=momentum)
+    optimizer = torch.optim.SGD(params=model.parameters(), **hp_optim)
+    trainer = ClassifierTrainer(model, loss_fn, optimizer, device)
+    
+    fit_res = trainer.fit(dl_train, dl_test, epochs, checkpoints, early_stopping=early_stopping)
+        """
+    num_classes = 10
+    dl_train = DataLoader(ds_train, bs_train, shuffle=True)
+    dl_test = DataLoader(ds_test, bs_test, shuffle=False)
+    
+    in_size = ds_train[0][0].shape
+    channels = [filter for filter in filters_per_layer for i in range(layers_per_block)]
+    print(channels)
+    model_param = dict(
+        in_size=ds_train[0][0].shape, out_classes=num_classes, channels=channels,
+        pool_every=pool_every, hidden_dims=hidden_dims, conv_params=dict(kernel_size=3, stride=1, padding=1),
+        activation_type='lrelu', activation_params=dict(negative_slope=0.01),
+        pooling_type='avg', pooling_params=dict(kernel_size=2),
+    )
+    if model_type == 'resnet':
+        print('resnet model')
+        model_param['batchnorm'] =True
+        model_param['bottleneck'] = False
+        model_param['dropout'] = 0.1
+        model = ResNet(**model_param)
+    else:
+        model = CNN(**model_param)
+        print("cnn model")
+    #net = ResNet(**model_param)
+    model = ArgMaxClassifier(model).to(device)
+    print(model)
+    loss_fn = torch.nn.CrossEntropyLoss()
+    hp_optim = dict(lr=lr,
+            weight_decay=reg,
+            momentum=momentum)
+    optimizer = torch.optim.SGD(params=model.parameters(), **hp_optim)
+    trainer = ClassifierTrainer(model, loss_fn, optimizer, device)
+    
+    fit_res = trainer.fit(dl_train, dl_test, epochs, early_stopping=early_stopping)
     # ========================
 
     save_experiment(run_name, out_dir, cfg, fit_res)
@@ -263,7 +323,7 @@ def parse_cli():
         "--model-type",
         "-M",
         choices=MODEL_TYPES.keys(),
-        default="cnn",
+        default="resnet",
         help="Which model instance to create",
     )
 
