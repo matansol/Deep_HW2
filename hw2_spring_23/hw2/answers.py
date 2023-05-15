@@ -104,7 +104,14 @@ def part2_dropout_hp():
 
 part2_q1 = r"""
 **Your answer:**
+1. we can see from the graphs that the one's without dropout has better result both in test and train sets. 
+the dropout techniqe is used to reduce the overffit by damaging the learning process so it wont be to tilted to the train set. that is why we are expected the model without dropout will do better on the train test but worse on the test set.
+we can see from the graphs that on the train sets our assumptions were true, and the model without the dropout was much better. but on the test set the model with the dropout (the orenge one) wasn't better than the model without dropout as we assumed.
+we also see that the acuracy of the orenge graph is about the same in both the train and the test.?????????????????? maybe remove the line?????
+we think the problem is the that dropout precentage was to big and needed to modify to around 0.1.
 
+2. for the green graph represent the model with dropout 0.8 we can see only small changing in the accuracy witch means the model wasn't able to learn much from the data and this is expected because doupout 0.8 means 80% of the network connections are loss, and that is damaging the learning process alot. 
+there for as we expected the orenge, the model with dropout 0.4 as mutch better results than the green one.
 
 Write your answer using **markdown** and $\LaTeX$:
 ```python
@@ -229,7 +236,11 @@ def part3_optim_hp():
 
 part3_q1 = r"""
 **Your answer:**
+1. our model doesn't have high optimization error, we can see that from the decision boundary plot that almost all of the dots are in the right decision boundary so our model accuracy is high.
 
+2. the model Generalization error is also low and that we can see from the accuracy and loss plots where the test and train scores are very close so the model is doing good on unseen data - accuracy on the test set is over 90%.
+
+3. same in Approximation error is good enough..................................................................
 
 Write your answer using **markdown** and $\LaTeX$:
 ```python
@@ -243,6 +254,7 @@ An equation: $e^{i\pi} -1 = 0$
 part3_q2 = r"""
 **Your answer:**
 
+We didn't expect the FPR and FNR to be higher because as we said in the previous answer our model preform prety good so we predict the FPR and FNR to be low as there are. But we think it is odd the there is a big defference between those two - FPR is 0.02 and FNR is 0.075 more than 3 times, it is odd because the threshold is 0.5 so we expected that they both will be roughly the sime.
 
 Write your answer using **markdown** and $\LaTeX$:
 ```python
@@ -256,6 +268,9 @@ An equation: $e^{i\pi} -1 = 0$
 part3_q3 = r"""
 **Your answer:**
 
+1. In this case we would like to avoid as mutch FPR scores as possible to reduce the number of expensive test, because a person with the disease will develop non-lethal symptoms that immediately confirm the diagnosis we can accept more FNR to reduce the FTR so we would choose a higher treshold.
+
+2. In this case we think that getting FNR is worse because then that person chance to die are high, so we would like to avoid FNR as much as possible, not changing the threshold that we get from the ROC curve is pretty good because it give a low FNR (0.02) and still minimaiz the FPR.
 
 Write your answer using **markdown** and $\LaTeX$:
 ```python
