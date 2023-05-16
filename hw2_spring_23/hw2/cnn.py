@@ -106,7 +106,7 @@ class CNN(nn.Module):
             # ====== YOUR CODE: ======
             x = torch.rand(self.in_size).unsqueeze(0)
             features = self.feature_extractor(x)
-            print(torch.numel(features))
+            #print(torch.numel(features))
             return torch.numel(features)
             # ========================
         finally:
@@ -226,11 +226,11 @@ class ResidualBlock(nn.Module):
         # TODO: Implement the forward pass. Save the main and residual path to `out`.
         out: Tensor = None
         # ====== YOUR CODE: ======
-        print(x.shape)
+        #print(x.shape)
         main_path = self.main_path(x)
-        print(main_path.shape)
+        #print(main_path.shape)
         short_path = self.shortcut_path(x)
-        print(short_path.shape)
+        #print(short_path.shape)
         out = main_path + short_path
         # ========================
         out = torch.relu(out)
@@ -334,12 +334,12 @@ class ResNet(CNN):
         
         for i in range(0, N, self.pool_every):
             inner_channels = channels_size[i: i + self.pool_every]
-            print(inner_channels)
+            #print(inner_channels)
             channels = inner_channels
             #in_channel = inner_channels[0]
             kernel_size = [3]*len(channels)
-            print(len(kernel_size))
-            print(len(channels))
+            #print(len(kernel_size))
+            #print(len(channels))
             if self.bottleneck and in_channel == channels[-1]:
                 R_bottle_blocks = ResidualBottleneckBlock(in_out_channels=in_channel, inner_channels=channels[1:-1],                                   inner_kernel_sizes=kernel_size[1:-1], batchnorm=self.batchnorm,            dropout=self.dropout, activation_type=self.activation_type, activation_params=self.activation_params)
                 layers.append(R_bottle_blocks)

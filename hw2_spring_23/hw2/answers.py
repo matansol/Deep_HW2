@@ -73,11 +73,10 @@ def part2_optim_hp():
     # You may want to use different learning rates for each optimizer.
     # ====== YOUR CODE: ======
     wstd = 0.2
-    lr_vanilla = 0.05
-    lr_momentum = 0.03
-    lr_rmsprop = 0.0
+    lr_vanilla = 0.043
+    lr_momentum = 0.0035
+    lr_rmsprop = 0.0001
     reg = 0.005
-
     # ========================
     return dict(
         wstd=wstd,
@@ -284,7 +283,21 @@ An equation: $e^{i\pi} -1 = 0$
 
 part3_q4 = r"""
 **Your answer:**
+1.
+For the columns, when depth is fixed and width is varies, we can see that only when depth=4, the test accuracy increase while the width is increase to, in the other cases, we get the best test accuracy for width=8, and when the width became bigger the test accuracy decrease a little.
 
+2.
+For the columns, when depth is fixed and width is varies, we can see that for all thw rows we don't get a monotonic connection while the depth is increase so the test accuracy increase too.
+But in tow rows we get that the best accuracy is for the higest depth.
+
+3.
+The results that we get on the model with depth=1 width=32 is smaller than the model with depth=4, width=8,
+We can assume that we get this result because the first model has only one level of depth. while the second model is depper.
+The both models have the same number of total parameters, but the deeper model capture hierarchical representations and complex patterns.
+
+4.
+As we can see in the tests results, we get better results when we use the optimal threshold.
+When we use the optimal threshold, we choose the treshold to be the balances between the FPR and FNR, as a result we get that the model improve prediction accuracy on the test set.
 
 Write your answer using **markdown** and $\LaTeX$:
 ```python

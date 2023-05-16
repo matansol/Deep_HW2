@@ -93,11 +93,11 @@ class MomentumSGD(Optimizer):
         # TODO: Add your own initializations as needed.
         # ====== YOUR CODE: ======
         #self.v = 0
-        self.hist = [0 for p, _ in params]
+        self.velocity = [0 for p, _ in params]
         # ========================
 
     def step(self):
-        for (p, dp), (i, _) in zip(self.params, enumerate(self.hist)):
+        for (p, dp), (i, _) in zip(self.params, enumerate(self.velocity)):
             if dp is None:
                 continue
 
@@ -108,12 +108,12 @@ class MomentumSGD(Optimizer):
             dp += self.reg * p
 
             # if flag:
-            self.hist[i] = self.momentum * self.hist[i] - self.learn_rate * dp
+            self.velocity[i] = self.momentum * self.velocity[i] - self.learn_rate * dp
             # else:
             #     self.flag = True
             #     self.hist[p] = -self.learn_rate * dp
 
-            p += self.hist[i]
+            p += self.velocity[i]
             
             
 #         for p, dp in self.params:
@@ -151,11 +151,11 @@ class RMSProp(Optimizer):
 
         # TODO: Add your own initializations as needed.
         # ====== YOUR CODE: ======
-        raise NotImplementedError()
+        self.r = [0 for p, _ in params]
         # ========================
 
     def step(self):
-        for p, dp in self.params:
+        for (p, dp), (i, _) in zip(self.params, enumerate(self.r)):
             if dp is None:
                 continue
 
@@ -164,5 +164,7 @@ class RMSProp(Optimizer):
             # average of it's previous gradients. Use it to update the
             # parameters tensor.
             # ====== YOUR CODE: ======
-            raise NotImplementedError()
+            dp += self.reg * p
+            self.r[i] = self.decay*self.r[i] + (1 - self.decay)*dp*dp
+            p -= (self.learn_rate * dp) / torch.sqrt(self.r[i] + self.eps)
             # ========================
