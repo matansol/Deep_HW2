@@ -416,6 +416,15 @@ An equation: $e^{i\pi} -1 = 0$
 
 part6_q1 = r"""
 **Your answer:**
+1.
+The model detect not very well, we can see in the first picture that altough the model idetefiy the objects, when one object overlap aonther one, the model little mistake in the bounding box size.
+Morover, in the second picture, we can see that again when one object overlap another one, not only the bounding box size is not very well, the model miss one of the object (the cat) in that picture.
+Also the model fail in classifier most of the objects in both pictures.
+
+2.
+The reason that can possible be of the model's failures in the calssifier of the objects, is that myabe the model didnt train on a huge dataset of dolphins and most of the examples were of person, and that can lead him to make a incorrent classify.
+Another reason is that the first picture is very rare because there are dolphins in the air while probably in most of the pictures they appear in the sea, and that can casue to confusing of the model.
+Morover, another reason is that we use the model yolov5s, which has less parameters, therfore it is less accorate, when we try to use a diffrent model like yolov5m, it has a better results in the second picture.
 
 
 Write your answer using **markdown** and $\LaTeX$:
