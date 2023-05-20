@@ -12,7 +12,7 @@ K_values=(32 64)
 for K in "${K_values[@]}"; do
   for L in "${L_values[@]}"; do
     # Assemble the command with the current L and K values
-    command="srun -c 2 --gres=gpu:1 --pty python -m hw2.experiments run-exp -n exp1_1_L$L_K$K -K $K -L $L -P 2 -H 100"
+    command="srun -c 2 --gres=gpu:1 --pty python -m hw2.experiments run-exp -n exp1_1 -K $K -L $L -P 2 -H 100 --early-stopping 8 -M 'cnn'"
 
     # Execute the command
     eval "$command"

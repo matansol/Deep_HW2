@@ -81,7 +81,8 @@ class CNN(nn.Module):
         #  CONV->ACTs should exist at the end, without a POOL after them.
         # ====== YOUR CODE: ====== 
         
-        activation = nn.ReLU() if self.activation_type == 'relu' else nn.LeakyReLU(**self.activation_params)
+        activation = ACTIVATIONS[self.activation_type](**self.activation_params)
+        # nn.ReLU() if self.activation_type == 'relu' else nn.LeakyReLU(**self.activation_params)
         pool = nn.MaxPool2d(**self.pooling_params) if self.pooling_type == 'max' else nn.AvgPool2d(**self.pooling_params)
         in_channel = in_channels
         for i, out_channel in enumerate(self.channels):
@@ -106,7 +107,6 @@ class CNN(nn.Module):
             # ====== YOUR CODE: ======
             x = torch.rand(self.in_size).unsqueeze(0)
             features = self.feature_extractor(x)
-            #print(torch.numel(features))
             return torch.numel(features)
             # ========================
         finally:
@@ -196,8 +196,9 @@ class ResidualBlock(nn.Module):
         #    correct comparison in the test.
         # ====== YOUR CODE: ======
         
-        if activation_type:
-            activation = nn.ReLU() if activation_type == 'relu' else nn.LeakyReLU(**activation_params)
+        activation = ACTIVATIONS[activation_type](**activation_params)
+            
+        
         layers = []
         in_channel = in_channels
         
@@ -226,11 +227,9 @@ class ResidualBlock(nn.Module):
         # TODO: Implement the forward pass. Save the main and residual path to `out`.
         out: Tensor = None
         # ====== YOUR CODE: ======
-        #print(x.shape)
+
         main_path = self.main_path(x)
-        #print(main_path.shape)
         short_path = self.shortcut_path(x)
-        #print(short_path.shape)
         out = main_path + short_path
         # ========================
         out = torch.relu(out)
@@ -326,7 +325,7 @@ class ResNet(CNN):
         # - Use batchnorm and dropout as requested.
         # ====== YOUR CODE: ======
         
-        activation = nn.ReLU() if self.activation_type == 'relu' else nn.LeakyReLU(**self.activation_params)
+        activation = ACTIVATIONS[self.activation_type](**self.activation_params)        
         pool = nn.MaxPool2d(**self.pooling_params) if self.pooling_type == 'max' else nn.AvgPool2d(**self.pooling_params)
         N = len(self.channels)
         in_channel = in_channels
@@ -334,12 +333,8 @@ class ResNet(CNN):
         
         for i in range(0, N, self.pool_every):
             inner_channels = channels_size[i: i + self.pool_every]
-            #print(inner_channels)
             channels = inner_channels
-            #in_channel = inner_channels[0]
             kernel_size = [3]*len(channels)
-            #print(len(kernel_size))
-            #print(len(channels))
             if self.bottleneck and in_channel == channels[-1]:
                 R_bottle_blocks = ResidualBottleneckBlock(in_out_channels=in_channel, inner_channels=channels[1:-1],                                   inner_kernel_sizes=kernel_size[1:-1], batchnorm=self.batchnorm,            dropout=self.dropout, activation_type=self.activation_type, activation_params=self.activation_params)
                 layers.append(R_bottle_blocks)

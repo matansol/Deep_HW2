@@ -235,7 +235,7 @@ def part3_optim_hp():
 
 part3_q1 = r"""
 **Your answer:**
-1. our model doesn't have high optimization error, we can see that from the decision boundary plot that almost all of the dots are in the right decision boundary so our model accuracy is high.
+1. our model doesn't have high Optimization error, we can see that from the decision boundary plot that almost all of the dots are in the right decision boundary so our model accuracy is high.
 
 2. the model Generalization error is also low and that we can see from the accuracy and loss plots where the test and train scores are very close so the model is doing good on unseen data - accuracy on the test set is over 90%.
 
@@ -333,6 +333,11 @@ def part4_optim_hp():
 
 part4_q1 = r"""
 **Your answer:**
+
+1. the convolution without bottleneck we have 256*3*3*256 = 589,824 parameters 
+the convolution with bottleneck we have 256*64 + 64*3*3*64 + 64*256 =  69,632 parameters
+we can see that using bottleneck is reducing a lot of parameters.
+2. 
 
 
 Write your answer using **markdown** and $\LaTeX$:

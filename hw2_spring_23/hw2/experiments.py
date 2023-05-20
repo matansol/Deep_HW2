@@ -54,7 +54,6 @@ def mlp_experiment(
                     ),
                 threshold=0.5,
                 )
-   # print(model)
     loss_fn = torch.nn.CrossEntropyLoss()
     momentum = 0.8
     lr = 0.01
@@ -83,11 +82,11 @@ def cnn_experiment(
     bs_test=None,
     batches=100,
     epochs=100,
-    early_stopping=3,
+    early_stopping=8,
     checkpoints=None,
     lr=1e-3,
     reg=1e-3,
-    momentum = 0.001,
+    momentum = 0.01,
     # Model params
     filters_per_layer=[64],
     layers_per_block=2,
@@ -167,8 +166,8 @@ def cnn_experiment(
     model_param = dict(
         in_size=ds_train[0][0].shape, out_classes=num_classes, channels=channels,
         pool_every=pool_every, hidden_dims=hidden_dims, conv_params=dict(kernel_size=3, stride=1, padding=1),
-        activation_type='lrelu', activation_params=dict(negative_slope=0.01),
-        pooling_type='avg', pooling_params=dict(kernel_size=2),
+        activation_type='tanh',
+        pooling_type='max', pooling_params=dict(kernel_size=2, padding=1),
     )
     if model_type == 'resnet':
         print('resnet model')
@@ -181,7 +180,6 @@ def cnn_experiment(
         print("cnn model")
     #net = ResNet(**model_param)
     model = ArgMaxClassifier(model).to(device)
-    print(model)
     loss_fn = torch.nn.CrossEntropyLoss()
     hp_optim = dict(lr=lr,
             weight_decay=reg,
