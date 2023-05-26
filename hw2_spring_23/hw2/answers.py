@@ -453,14 +453,25 @@ An equation: $e^{i\pi} -1 = 0$
 
 part6_q3 = r"""
 **Your answer:**
+We chose to demostrate the next object detection pitfalls: occlusion, model bias and Deformation.
+Occlusion:
+The picture that demostrate an occlusion is the first picture that it is a pictuare of a road full of cars, that many cars occlude the cars that appear in front of them.
+We can see that the model detect the cars that appear more closely in the picture very well but most of the cars that appear further, the model doesnt recognize them and doesnt detect them at all.
+We can assume that the reasons of the model detection on that picture are that first of all the cars that appear closely are much bigger and clearer, and we can notice that the bounding box size are very good.
+Morover, we can see that the model detect well the cars that are hidden by the previos cars although those cars are not appear fully, probably because that the model assume that those objects suitable to be cars, and the model determine the bounding box size of them well.
+Also we can see that the score of car reduce as long as continue forward in the road until the model stop to detact the further objects.
 
+Model bias:
+we chose to demostrate a picture with model bias with scarecrow that appears in that picture.
+First we can see that the model detect well the bounding box size only half of the scarecrows but the model detact them as a person.
+We can see that the fronted scarecrow gets a very high score of 0.91 from the model, we can assume that the model recognize the scarecrow as a person because of the body shape of the object - having two hands and two legs.
+We can guss that the model detact the objects as a person and not as a scarecrow probabaly because the data train of the model doesnt contain a large samples of scarecrow.
 
-Write your answer using **markdown** and $\LaTeX$:
-```python
-# A code block
-a = 2
-```
-An equation: $e^{i\pi} -1 = 0$
+Deformation:
+We chose a picture that contains several vegetables that undergo deformation, for examples we can see a bent cucumber and potato, two carrots that merge and etc.
+We can see that almost a half of the objects the model detact well altough there are not in their normal shape, but the vegetbales with extremly rare shape like the cucumber and the potato, the model detact wrong as a banana becasue of the similar shape to it, altough that the cucumber has a diffrent color, green and not yellow and even that the potato's shape doesnt look like a regular banana.
+The vegetables that have a little deformation like the apple and the orange get a high score and currect, but the model give to the others a low score and wrong on thier determintaion.
+Also need to say that the model doesnt detact at all the tomato.
 
 """
 
