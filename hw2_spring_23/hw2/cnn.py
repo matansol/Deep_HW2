@@ -82,14 +82,13 @@ class CNN(nn.Module):
         # ====== YOUR CODE: ====== 
         
         activation = ACTIVATIONS[self.activation_type](**self.activation_params)
-        # nn.ReLU() if self.activation_type == 'relu' else nn.LeakyReLU(**self.activation_params)
         pool = nn.MaxPool2d(**self.pooling_params) if self.pooling_type == 'max' else nn.AvgPool2d(**self.pooling_params)
         in_channel = in_channels
         for i, out_channel in enumerate(self.channels):
             conv = nn.Conv2d(in_channel, out_channel, **self.conv_params)
             layers.append(conv)
             layers.append(activation)
-            if (i + 1) % self.pool_every == 0:# and (i + 1) != len(self.channels):
+            if (i + 1) % self.pool_every == 0 and (i + 1) != len(self.channels):
                 layers.append(pool)
             in_channel = out_channel
         # ========================

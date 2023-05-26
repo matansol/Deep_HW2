@@ -130,32 +130,6 @@ def cnn_experiment(
     #   for you automatically.
     fit_res = None
     # ====== YOUR CODE: ======
-    """
-    num_classes = 10
-    dl_train = DataLoader(ds_train, bs_train, shuffle=True)
-    dl_test = DataLoader(ds_test, bs_test, shuffle=False)
-    
-    in_size = ds_train[0][0].shape
-    channels = [filter for filter in filters_per_layer for i in range(layers_per_block)]
-    model_param = dict(
-        in_size=ds_train[0][0].shape, out_classes=num_classes, channels=channels,
-        pool_every=pool_every, hidden_dims=hidden_dims,
-        activation_type='lrelu', activation_params=dict(negative_slope=0.01),
-        pooling_type='avg', pooling_params=dict(kernel_size=2),
-        batchnorm=True, dropout=0.1,
-        bottleneck=False
-    )
-    net = ResNet(**model_param)
-    model = ArgMaxClassifier(model=net).to(device)
-    loss_fn = torch.nn.CrossEntropyLoss()
-    hp_optim = dict(lr=lr,
-            weight_decay=reg,
-            momentum=momentum)
-    optimizer = torch.optim.SGD(params=model.parameters(), **hp_optim)
-    trainer = ClassifierTrainer(model, loss_fn, optimizer, device)
-    
-    fit_res = trainer.fit(dl_train, dl_test, epochs, checkpoints, early_stopping=early_stopping)
-        """
     num_classes = 10
     dl_train = DataLoader(ds_train, bs_train, shuffle=True)
     dl_test = DataLoader(ds_test, bs_test, shuffle=False)
@@ -163,10 +137,11 @@ def cnn_experiment(
     in_size = ds_train[0][0].shape
     channels = [filter for filter in filters_per_layer for i in range(layers_per_block)]
     print(channels)
+    my_activation_type = 'tanh'
     model_param = dict(
         in_size=ds_train[0][0].shape, out_classes=num_classes, channels=channels,
         pool_every=pool_every, hidden_dims=hidden_dims, conv_params=dict(kernel_size=3, stride=1, padding=1),
-        activation_type='tanh',
+        activation_type=my_activation_type,
         pooling_type='max', pooling_params=dict(kernel_size=2, padding=1),
     )
     if model_type == 'resnet':
@@ -180,11 +155,12 @@ def cnn_experiment(
         print("cnn model")
     #net = ResNet(**model_param)
     model = ArgMaxClassifier(model).to(device)
-    loss_fn = torch.nn.CrossEntropyLoss()
+    print(model)
+    loss_fn = torch.nn.CrossEntropyLoss().to(device)
     hp_optim = dict(lr=lr,
-            weight_decay=reg,
-            momentum=momentum)
-    optimizer = torch.optim.SGD(params=model.parameters(), **hp_optim)
+            weight_decay=reg)
+            #momentum=momentum)
+    optimizer = torch.optim.Adam(params=model.parameters(), **hp_optim)
     trainer = ClassifierTrainer(model, loss_fn, optimizer, device)
     
     fit_res = trainer.fit(dl_train, dl_test, epochs, early_stopping=early_stopping)

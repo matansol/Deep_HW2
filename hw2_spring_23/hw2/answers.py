@@ -1,4 +1,4 @@
-r"""
+"""
 Use this module to write your answers to the questions in the notebook.
 
 Note: Inside the answer strings you can use Markdown format and also LaTeX
@@ -255,12 +255,6 @@ part3_q2 = r"""
 
 We didn't expect the FPR and FNR to be higher because as we said in the previous answer our model preform prety good so we predict the FPR and FNR to be low as there are. But we think it is odd the there is a big defference between those two - FPR is 0.02 and FNR is 0.075 more than 3 times, it is odd because the threshold is 0.5 so we expected that they both will be roughly the sime.
 
-Write your answer using **markdown** and $\LaTeX$:
-```python
-# A code block
-a = 2
-```
-An equation: $e^{i\pi} -1 = 0$
 
 """
 
@@ -271,12 +265,6 @@ part3_q3 = r"""
 
 2. In this case we think that getting FNR is worse because then that person chance to die are high, so we would like to avoid FNR as much as possible, not changing the threshold that we get from the ROC curve is pretty good because it give a low FNR (0.02) and still minimaiz the FPR.
 
-Write your answer using **markdown** and $\LaTeX$:
-```python
-# A code block
-a = 2
-```
-An equation: $e^{i\pi} -1 = 0$
 
 """
 
@@ -298,13 +286,6 @@ The both models have the same number of total parameters, but the deeper model c
 4.
 As we can see in the tests results, we get better results when we use the optimal threshold.
 When we use the optimal threshold, we choose the treshold to be the balances between the FPR and FNR, as a result we get that the model improve prediction accuracy on the test set.
-
-Write your answer using **markdown** and $\LaTeX$:
-```python
-# A code block
-a = 2
-```
-An equation: $e^{i\pi} -1 = 0$
 
 """
 # ==============
@@ -340,12 +321,6 @@ we can see that using bottleneck is reducing a lot of parameters.
 2. 
 
 
-Write your answer using **markdown** and $\LaTeX$:
-```python
-# A code block
-a = 2
-```
-An equation: $e^{i\pi} -1 = 0$
 
 """
 
