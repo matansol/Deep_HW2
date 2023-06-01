@@ -379,6 +379,13 @@ All models suffer from overffit but L=2 model sufer more propebly because he has
 part5_q4 = r"""
 **Your answer:**
 
+As we can see on the results we get, when k=32, all the models have almost the same accuracy, and the accuracy graphs are almost identical.
+By comparing this experement to 1.1 and 1.3, we can see that the test accuracy of the models in this experemnt is higher, in exp 1.1 we run a cnn model with the values of k=32 and L=8 and get a lower accuracy than now.
+We can guess that we get a better accuracy because we using a resent while using a dropout that reduce the overfit and residualblock that help learning more spesific gradient.
+Using resent can allow us to use much deep network without the problem of vanishing gradient.
+
+For the models with the values of k=(64, 128, 256), we see that the model with L=2 the accuracy is lower than the others model that almost the same, we can assume that as we see before, deeper model has a better results.
+For L=4/8 we get the best results that we get from all the experements, with more a deeper and widther network we can get better representation capacity and better generalization capabilities.
 
 Write your answer using **markdown** and $\LaTeX$:
 ```python
