@@ -74,8 +74,8 @@ def part2_optim_hp():
     # ====== YOUR CODE: ======
     wstd = 0.2
     lr_vanilla = 0.043
-    lr_momentum = 0.0035
-    lr_rmsprop = 0.0001
+    lr_momentum = 0.007
+    lr_rmsprop = 0.0002
     reg = 0.005
     # ========================
     return dict(
@@ -201,9 +201,9 @@ def part3_arch_hp():
     # TODO: Tweak the MLP architecture hyperparameters.
     # ====== YOUR CODE: ======
     n_layers = 4
-    hidden_dims = 8
+    hidden_dims = 12
     activation = "relu"
-    out_activation = "relu"
+    out_activation = "softmax"
     # ========================
     return dict(
         n_layers=n_layers,
@@ -225,9 +225,9 @@ def part3_optim_hp():
     #    What you returns needs to be a callable, so either an instance of one of the
     #    Loss classes in torch.nn or one of the loss functions from torch.nn.functional.
     # ====== YOUR CODE: ======
-    lr = 0.01
+    lr = 0.05
     weight_decay = 0.005
-    momentum = 0.7
+    momentum = 0.8
     loss_fn = torch.nn.CrossEntropyLoss()
     # ========================
     return dict(lr=lr, weight_decay=weight_decay, momentum=momentum, loss_fn=loss_fn)

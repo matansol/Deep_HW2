@@ -49,14 +49,14 @@ def mlp_experiment(
     model = BinaryClassifier(
                 model=MLP(
                     in_dim=2,
-                    dims=[*[width,]*depth, 2],
-                    nonlins=[*["tanh",]*depth, "tanh"]
+                    dims=[*[width,]*depth, 3],
+                    nonlins=[*["tanh",]*depth, "none"]
                     ),
                 threshold=0.5,
                 )
     loss_fn = torch.nn.CrossEntropyLoss()
     momentum = 0.8
-    lr = 0.01
+    lr = 0.05
     weight_decay = 0.005
     
     optimizer = torch.optim.SGD(params=model.parameters(),lr=lr, momentum=momentum, weight_decay=weight_decay)
