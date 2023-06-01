@@ -272,20 +272,23 @@ part3_q3 = r"""
 part3_q4 = r"""
 **Your answer:**
 1.
-For the columns, when depth is fixed and width is varies, we can see that only when depth=4, the test accuracy increase while the width is increase to, in the other cases, we get the best test accuracy for width=8, and when the width became bigger the test accuracy decrease a little.
+For the columns, when depth is fixed and width is varies, we can see that while the width is increased we get a better results in the validation and the test accuracy, until we get around 90% of accuracy.
+Also we can notice that the decision boundaries become more complex as long as the width is increased.
+For width=2 in columns 1 and 2, the decision boundries are close to a striaght line and in the others width we get more complex seperate.
 
 2.
-For the columns, when depth is fixed and width is varies, we can see that for all thw rows we don't get a monotonic connection while the depth is increase so the test accuracy increase too.
-But in tow rows we get that the best accuracy is for the higest depth.
+For the rows, when the width is fixed and the depth is varies, as long as the depth is increase, we get that the seperates have sharper curves.
+We can see that when width=2 as long as the depth is increase the model result is improved, but for the others, the model results while increasing the depth dont improving so much. 
+
 
 3.
-The results that we get on the model with depth=1 width=32 is smaller than the model with depth=4, width=8,
-We can assume that we get this result because the first model has only one level of depth. while the second model is depper.
-The both models have the same number of total parameters, but the deeper model capture hierarchical representations and complex patterns.
+The results that we get on the model with depth=1 width=32 are better than the model with depth=4, width=8.
+We can guess that when the model is wider, it increases its representational capacity, allowing it to potentially capture more complex patterns in the data.
 
 4.
 As we can see in the tests results, we get better results when we use the optimal threshold.
-When we use the optimal threshold, we choose the treshold to be the balances between the FPR and FNR, as a result we get that the model improve prediction accuracy on the test set.
+When we use the optimal threshold, we choose the treshold to be the balances between the FPR and FNR, by reducing both types of non-classifications(FPR, FNR).
+As a result we get that the model improve prediction accuracy on the test set.
 
 """
 # ==============
@@ -357,15 +360,7 @@ An equation: $e^{i\pi} -1 = 0$
 """
 
 part5_q3 = r"""
-**Your answer:**
 
-
-Write your answer using **markdown** and $\LaTeX$:
-```python
-# A code block
-a = 2
-```
-An equation: $e^{i\pi} -1 = 0$
 
 """
 
