@@ -17,7 +17,7 @@ A.  The shape of the tensor is [N x out_features, N x in_features] = $[64\cdot51
 B.  The matrix would not be sparse because the layer is fully connected, we have a connection between every two elements in X and Y.
 As a result, we will get a weight parameter that isnt a zero value in each element in jacobian.
 
-C.  No we don't have to materialize this jacobian tensor in order to calculate $\delta\mat{X}. 
+C.  No we don't have to materialize this jacobian tensor in order to calculate $\delta\mat{X}$. 
 we will use a matrix multiplation and chain rules $\delta\mat{X} =\pderiv{L}{\mat{Y}}W^T$
 As a result instead of materialization the whole jacobian matrix we can only use the expression that appear above because we know the values of $\pderiv{L}{\mat{Y}}$ and $W^T$.
 
