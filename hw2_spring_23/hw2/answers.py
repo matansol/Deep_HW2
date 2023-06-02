@@ -14,25 +14,22 @@ part1_q1 = r"""
 1. 
 A.  The shape of the tensor is [N x out_features, N x in_features] = $[64\cdot512 , 64\cdot1024]$
 
-B.  The matrix **would not be sparse** because we have a connection between every two elements in X and Y(the layer is fully connected).
-Then we will get a weight parameter (non zero value) in each element in jacobian.
+B.  The matrix would not be sparse because the layer is fully connected, we have a connection between every two elements in X and Y.
+As a result, we will get a weight parameter that isnt a zero value in each element in jacobian.
 
-C.  No we don't have to materialize this jacobian.
-According to matrix multiplation and chain rules $\delta\mat{X} =\pderiv{L}{\mat{Y}}W^T$
-Therefore instead of materialization the entire jacobian matrix we can just use use expression written above because we 
-know both $\pderiv{L}{\mat{Y}}$ and $W^T$
+C.  No we don't have to materialize this jacobian tensor in order to calculate $\delta\mat{X}. 
+we will use a matrix multiplation and chain rules $\delta\mat{X} =\pderiv{L}{\mat{Y}}W^T$
+As a result instead of materialization the whole jacobian matrix we can only use the expression that appear above because we know the values of $\pderiv{L}{\mat{Y}}$ and $W^T$.
 
 2.
 A.  The shape of the tensor is [N x out_features, in_features x out_features] = $[64\cdot512 , 512\cdot1024]$
 
-B.  The matrix **would be sparse** because only derivatives between some Yi element and weights that
+B.  The matrix would be sparse because only derivatives between some Yi element and weights that
 represents connection between same Yi and some Xj will not be zero. 
 So since many elements do not hold this connection most of the matrix will be zeros.
 
-C.  No we don't have to materialize this jacobian.
-According to matrix multiplication and chain rules $\delta\mat{W} = X^T\pderiv{L}{\mat{Y}}$
-Therefore instead of materialization the entire jacobian matrix we can just use use expression written above because we 
-know both $\pderiv{L}{\mat{Y}}$ and $X^T$
+C. No we don't have to materialize this jacobian tensor in order to calculate $\delta\mat{X}. 
+Because of the same reasons that we write in the previous section.
 
 
 Write your answer using **markdown** and $\LaTeX$:
@@ -82,8 +79,8 @@ def part2_optim_hp():
     # ====== YOUR CODE: ======
     wstd = 0.2
     lr_vanilla = 0.043
-    lr_momentum = 0.0035
-    lr_rmsprop = 0.0001
+    lr_momentum = 0.007
+    lr_rmsprop = 0.0002
     reg = 0.005
     # ========================
     return dict(
@@ -103,21 +100,20 @@ def part2_dropout_hp():
     # TODO: Tweak the hyperparameters to get the model to overfit without
     # dropout.
     # ====== YOUR CODE: ======
-    wastd = 0.2
-    lr = 0.01
+    wstd = 0.1
+    lr = 0.001
     # ========================
     return dict(wstd=wstd, lr=lr)
 
 
 part2_q1 = r"""
 **Your answer:**
-1. We can see from the graphs that the one's without dropout has better result both in test and train sets. 
-the dropout techniqe is used to reduce the overffit by damaging the learning process so it won't be to tilted to the train set. that is why we are expected the model without dropout will do better on the train test but worse on the test set.
-we can see from the graphs that on the train sets our assumptions were true, and the model without the dropout was much better. but on the test set the model with the dropout (the orenge one) wasn't better than the model without dropout as we assumed.
-We also see that the acuracy of the orenge graph is about the same in both the train and the test, witch means we dont have overffit.
+1. We can see from the graphs that the one's without dropout has the better accuracy in the train sets - overfit and a bad result on the test set, while as we expected the graphs with the dropout get better results with a higher accuracy on the test set because of the model has better generalization and less overfit on the train set.
+The dropout techniqe is used to reduce the overffit by damaging the learning process so it won't be to tilted to the train set. that is why we are expected the model without dropout will do better on the train test but worse on the test set.
+Also we can see that a model with a droput, has not only a better accuracy on the test, but also lower loss on the test set, while without droput the loss is higher.
 we think the problem is the that dropout precentage was to big and needed to modify to around 0.15.
 
-2. for the green graph represent the model with dropout 0.8 we can see only small changing in the accuracy witch means the model wasn't able to learn much from the data and this is expected because doupout 0.8 means 80% of the network connections are loss, and that is damaging the learning process alot, there for as we expected the orenge, the model with dropout 0.4 as mutch better results than the green one.
+2. for the green graph represent the model with dropout 0.8 we can see only small changing in the accuracy wich means the model wasn't able to learn much from the data and this is expected because doupout 0.8 means 80% of the network connections are loss, and that is damaging the learning process alot, there for as we expected the orenge, the model with dropout 0.4 as mutch better results than the green one.
 
 
 """
@@ -190,9 +186,9 @@ def part3_arch_hp():
     # TODO: Tweak the MLP architecture hyperparameters.
     # ====== YOUR CODE: ======
     n_layers = 4
-    hidden_dims = 8
+    hidden_dims = 12
     activation = "relu"
-    out_activation = "relu"
+    out_activation = "softmax"
     # ========================
     return dict(
         n_layers=n_layers,
@@ -214,9 +210,9 @@ def part3_optim_hp():
     #    What you returns needs to be a callable, so either an instance of one of the
     #    Loss classes in torch.nn or one of the loss functions from torch.nn.functional.
     # ====== YOUR CODE: ======
-    lr = 0.01
+    lr = 0.05
     weight_decay = 0.005
-    momentum = 0.7
+    momentum = 0.8
     loss_fn = torch.nn.CrossEntropyLoss()
     # ========================
     return dict(lr=lr, weight_decay=weight_decay, momentum=momentum, loss_fn=loss_fn)
@@ -224,18 +220,20 @@ def part3_optim_hp():
 
 part3_q1 = r"""
 **Your answer:**
-1. Optimization error is a measure of error resulting from not finding the exact minimizer for training data loss.
-As we can see from plots we reached pretty good results in manner of lost and acc. 
-ur model doesn't have high Optimization error, we can see that from the decision boundary plot that almost all of the dots are in the right decision boundary means our model accuracy is high.
+1.
+Optimization refers to the process of adjusting the parameters of a model to minimize the difference between the predicted output and the actual output.
+Meaning that we want to find the best set of parameters that minimize the error or maximize the performance of the model.
+Our model doesn't have high Optimization error, we can see that from the decision boundary plot that almost all of the dots are in the right decision boundary means our model accuracy is high.
 
-2. Generalization error is a measure of error resulting from the fact that we use sample as a substitute for the true 
-distribution and our inability to find the optimal parametric model.
+2.
+Generalization error is the difference between the model's performance on the training data and its performance on new data - the test set.
 We think our model Generalization error is also low, because as we can see the accuracy and loss plots on the test and the train scores are very close, and the model is doing good on unseen data - the accuracy on the test set is over 90%.
 
-3. Approximation error is a measure of error resulting from the fact that we limited our self to some family of models,
-where the optimal model may not be found.
-As we can see from plot we got pretty good result meaning that our model was not so far from optimal one.
-But when we look at decision boundary plot, we can see that there are some areas in which the model predict failes. Therefore approximation error that we do have is probably caused by the fact that our model could not identify this "area" of true labels.
+3.
+Approximation error refers to the discrepancy between an exact value and some approximation to it.
+As we can see from the plots, the results we get are not so far from the optimal one.
+But when we look at decision boundary plot, we can see that there are some areas in which the model predict failes. 
+As a result approximation error that we do have is probably caused by the fact that our model could not identify well those areas of true class.
 To improve the Approximation error he can add some non linear features, and by that we will get a bigger family models witch can get better results.
 
 """
@@ -262,20 +260,22 @@ part3_q3 = r"""
 part3_q4 = r"""
 **Your answer:**
 1.
-For the columns, when depth is fixed and width is varies, we can see that only when depth=4, the test accuracy increase while the width is increase to, in the other cases, we get the best test accuracy for width=8, and when the width became bigger the test accuracy decrease a little.
+For the columns, when depth is fixed and width is varies, we can see that while the width is increased we get a better results in the validation and the test accuracy, until we get around 90% of accuracy.
+Also we can notice that the decision boundaries become more complex as long as the width is increased.
+For width=2 in columns 1 and 2, the decision boundries are close to a striaght line and in the others width we get more complex seperate.
 
 2.
-For the columns, when depth is fixed and width is varies, we can see that for all the rows we don't get a monotonic connection while the depth is increase so the test accuracy increase too.
-But in tow rows we get that the best accuracy is for the higest depth.
+For the rows, when the width is fixed and the depth is varies, as long as the depth is increase, we get that the seperates have sharper curves.
+We can see that when width=2 as long as the depth is increase the model result is improved, but for the others, the model results while increasing the depth dont improving so much. 
 
 3.
-The results that we get on the model with depth=1 width=32 is smaller than the model with depth=4, width=8,
-We can assume that we get this result because the first model has only one level of depth. while the second model is depper.
-The both models have the same number of total parameters, but the deeper model capture hierarchical representations and complex patterns.
+The results that we get on the model with depth=1 width=32 are better than the model with depth=4, width=8.
+We can guess that when the model is wider, it increases its representational capacity, allowing it to potentially capture more complex patterns in the data.
 
 4.
 As we can see in the tests results, we get better results when we use the optimal threshold.
-We choose the treshold to be the balances between the FPR and FNR, as a result we get that the model improve prediction accuracy on the test set.
+When we use the optimal threshold, we choose the treshold to be the balances between the FPR and FNR, by reducing both types of non-classifications(FPR, FNR).
+As a result we get that the model improve prediction accuracy on the test set..
 
 """
 # ==============
@@ -305,28 +305,33 @@ def part4_optim_hp():
 part4_q1 = r"""
 **Your answer:**
 
-1. the convolution **without bottleneck** we have $256 \cdot ((256 \cdot 3 \cdot 3) + 1) = 590,080 $ parameters, so in our case with 2 layers we will get $590,080 \cdot 2 = 1,180,160$ 
+1.
+The convolution **without bottleneck** we have $64 \cdot ((256 \cdot 3 \cdot 3) + 1) + $256 \cdot ((64 \cdot 3 \cdot 3) + 1) = 295,232 $ parameters
 The convolution **with bottleneck** we have $(256+1)\cdot64 + 64\cdot(3\cdot3\cdot64 + 1) + (64 + 1)\cdot256 = 70,016$ parameters
 We can see that using bottleneck is **reducing** a lot of parameters.
 
-2. We know that FLOPs are basic math operations and RELU activation function.
-To calculate one convolution layer between ${C_{in},H_{in},W_{in}}$ to $C_{out},H_{out},W_{out}$ we have  
-$ 2\cdot c_{in} \cdot k^2 \cdot c_{out} \cdot W_{out} \cdot H_{out}$ floating point operations,
-(2 is because we have sum and mul operation witch are require in convolution).
-Also activation function (RELU) of each layer require $H_{out} \cdot W_{out}$ FLOPs.
-We can see that for the regular block there are alot more FLOPs then the bottleneck block.
-Therefore the using bottleneck is **reducing** a lot of FLOPs.
+2.
+In bottleneck block, we need to consider the height and the width dimensions when we calculate 1x1 convolution: the output has 256 chunnels while the input has 64.
+Every element in the ouput is computed by a 1X1 kernel.
+For, 3x3 convolution: The input has 64 channels, and the output has 64 channels too. Every element in the output is computed by a 3x3 kernel.
+The final computation is ((1 * 1 * 256 * 64) + (3 * 3 * 64 * 64) + (1 * 1 * 256 * 64)) * (H * W) = (16,384 + 36,864 + 16,384) * (H * W) = 69,632 * (H * W)
 
-3. **Spatial**
-   In the **regular block** we have two convolution layers of 3x3 therefore the respective field is 5x5.
-   In the **bottleneck block** we have two convolution layers of 1x1 and one convolution layer of 3x3 therefore the
-   respective field is 3x3. We can conclude that the **regular block combine the input better in terms of spatial**.
+In regular block, we need to consider the height and the width dimensions in the computation of 3x3 convolution: The both the input and the output has 256 channels.
+Every element in the output is computed by a 3x3 kernel. Every dot product involves 3x3 multiplications and more 8 additions.
+For 3x3 convolution. The input has 256 channels, and the output has a different number of channels, we assume 64 channels.The same like the first convolution, every element of the output is computed by a 3x3 kernel.
+So, we will get the next number:
+((3 * 3 * 256 * 64) + (3 * 3 * 64 * 256)) * (W * H) = (294,912 + 294,912) * (W * H) = 589,824 * (W * H)
+
+3. Spatial
+   In the regular block we have two convolution layers of 3x3 therefore the respective field is 5x5.
+   In the bottleneck block we have two convolution layers of 1x1 and one convolution layer of 3x3 therefore the
+   respective field is 3x3. We can conclude that the regular block combine the input better in terms of spatial.
    
    
-   **Across feature map**
-   Since we project in **bottleneck block** the first layer to smaller dimension, not all inputs has the same 
-   influence across feature map, on the other hand in the **regular block** since we don't project the input have 
-   the same influence across feature map.
+   Across feature map
+   In bottleneck block the first layer to smaller dimension because we reduce the number of input channels,
+   So, not all of the input channels have the same influence across feature maps.
+   On the other hand in the regular block since we don't project the input have the same influence across feature map.
 
 
 

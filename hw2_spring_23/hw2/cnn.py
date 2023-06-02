@@ -88,7 +88,7 @@ class CNN(nn.Module):
             conv = nn.Conv2d(in_channel, out_channel, **self.conv_params)
             layers.append(conv)
             layers.append(activation)
-            if (i + 1) % self.pool_every == 0: #and (i + 1) != len(self.channels):
+            if (i + 1) % self.pool_every == 0: 
                 layers.append(pool)
             in_channel = out_channel
         # ========================
