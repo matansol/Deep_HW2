@@ -306,7 +306,7 @@ part4_q1 = r"""
 **Your answer:**
 
 1.
-The convolution **without bottleneck** we have $64 \cdot ((256 \cdot 3 \cdot 3) + 1) + $256 \cdot ((64 \cdot 3 \cdot 3) + 1) = 295,232 $ parameters
+The convolution **without bottleneck** we have $64 \cdot ((256 \cdot 3 \cdot 3) + 1) + 256 \cdot ((64 \cdot 3 \cdot 3) + 1) = 295,232$ parameters
 The convolution **with bottleneck** we have $(256+1)\cdot64 + 64\cdot(3\cdot3\cdot64 + 1) + (64 + 1)\cdot256 = 70,016$ parameters
 We can see that using bottleneck is **reducing** a lot of parameters.
 
