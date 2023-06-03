@@ -460,11 +460,15 @@ We can see that almost a half of the objects the model detact well altough there
 The vegetables that have a little deformation like the apple and the orange get a high score and currect, but the model give to the others a low score and wrong on thier determintaion.
 Also need to say that the model doesnt detact at all the tomato.
 
+Another picture that we chose, is a picture that we see a person stand in front of a very shinny sun, therefore the picture is very lightly and probably it makes harder to the model to detact the pesron on the picture.
+
 """
 
 part6_bonus = r"""
 **Your answer:**
-
+In order to improve the model performance, we are going to try to improve the perfomance of the forth picture, the shinny picture with a person.
+We use the library of PIL in order to improve the play with the light of that picture.
+As we can see, after changing the light a little in that picture, the model detact well the person in the picture, with a score of 40%.
 
 Write your answer using **markdown** and $\LaTeX$:
 ```python
